@@ -1,30 +1,20 @@
-import { notFound } from 'next/navigation';
+import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
-import { ProductCard } from '@/components/product-card';
 
-export const revalidate = 30;
+export const revalidate = 60;
 
-export default async function CategoryPage({ params }: { params: { slug: string } }) {
-  const { data: category } = await supabase.from('categories').select('*').eq('slug', params.slug).eq('active', true).maybeSingle();
-  if (!category) return notFound();
-
-  const { data: links } = await supabase.from('product_categories').select('product_id').eq('category_id', category.id);
-  const ids = (links ?? []).map((l: any) => l.product_id);
-
-  const { data: products } = ids.length
-    ? await supabase.from('products').select('*, product_images(image_url, is_primary, display_order)').in('id', ids).eq('visibility', 'published')
-    : { data: [] as any[] };
-
+export default async function CategoriesPage() {
+  const { data } = await supabase.from('categories').select('*').eq('active', true).order('display_order');
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
-      <h1 className="font-display text-3xl font-bold mb-6">{category.name}</h1>
-      {(!products || products.length === 0) ? (
-        <p className="text-ink/60">لسه مفيش منتجات مضافة للفئة دي.</p>
-      ) : (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {products.map((p: any) => <ProductCard key={p.id} product={p} />)}
-        </div>
-      )}
+      <h1 className="font-display text-3xl font-bold mb-6">الفئات</h1>
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+        {(data ?? []).map((c: any) => (
+          <Link key={c.id} href={`/categories/${c.slug}`} className="p-6 rounded-card bg-white border border-blush text-center font-bold hover:border-rose transition-colors">
+            {c.name}
+          </Link>
+        ))}
+      </div>
     </div>
   );
 }
