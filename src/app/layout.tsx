@@ -13,7 +13,7 @@ const display = El_Messiri({
 });
 
 const body = Almarai({
-  subsets: ['arabic', 'latin'],
+  subsets: ['arabic'],
   weight: ['300', '400', '700', '800'],
   variable: '--font-body',
   display: 'swap',
