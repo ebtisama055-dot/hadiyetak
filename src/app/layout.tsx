@@ -6,6 +6,13 @@ import { SiteFooter } from '@/components/site-footer';
 import { WhatsAppButton } from '@/components/whatsapp-button';
 import { getSiteBrand } from '@/lib/site-settings';
 
+// Without this, Next.js treats the layout as fully static and caches the
+// Supabase fetch inside getSiteBrand() at build time — so a new logo saved
+// from Admin Settings would only appear after a redeploy. Revalidating every
+// 60s means logo/name/tagline changes show up on their own shortly after
+// saving, without needing a rebuild.
+export const revalidate = 60;
+
 const display = El_Messiri({
   subsets: ['arabic', 'latin'],
   weight: ['500', '600', '700'],
