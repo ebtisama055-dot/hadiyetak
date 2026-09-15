@@ -4,7 +4,7 @@ import './globals.css';
 import { SiteHeader } from '@/components/site-header';
 import { SiteFooter } from '@/components/site-footer';
 import { WhatsAppButton } from '@/components/whatsapp-button';
-import { getSiteBrand } from '@/lib/site-settings';
+import { getSiteBrand, getSocialLinks } from '@/lib/site-settings';
 
 // Without this, Next.js treats the layout as fully static and caches the
 // Supabase fetch inside getSiteBrand() at build time — so a new logo saved
@@ -39,13 +39,13 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const brand = await getSiteBrand();
+  const [brand, socialLinks] = await Promise.all([getSiteBrand(), getSocialLinks()]);
   return (
     <html lang="ar" dir="rtl" className={`${display.variable} ${body.variable}`}>
       <body className="font-body min-h-screen flex flex-col antialiased overflow-x-hidden">
         <SiteHeader brand={brand} />
         <main className="flex-1">{children}</main>
-        <SiteFooter brand={brand} />
+        <SiteFooter brand={brand} socialLinks={socialLinks} />
         <WhatsAppButton />
       </body>
     </html>
