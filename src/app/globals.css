@@ -9,14 +9,18 @@
   /* PERMANENT CORE BRAND TOKENS — never overridden by a season.
      A season may read --season-* variables (set inline per-section by the
      seasonal overlay components) but must never redefine these. */
-  --brand-primary: #5C2A3A;
-  --brand-secondary: #B98189;
-  --brand-background: #FBF7F2;
-  --brand-surface: #EFE6DA;
-  --brand-text: #2B2725;
-  --brand-muted: #8A7F76;
-  --brand-border: #E3D8CA;
-  --brand-accent: #B8935B;
+  --brand-primary: #D98FA1;
+  --brand-secondary: #D7B8C4;
+  --brand-background: #FFF9F5;
+  --brand-surface: #F7D7DC;
+  --brand-peach: #F3C6B8;
+  --brand-sand: #EADDCB;
+  --brand-sage: #C8D5C1;
+  --brand-gold: #E6C9A8;
+  --brand-muted: #A89CA0;
+  --brand-text: #4A3B38;
+  --brand-border: #F0DDE1;
+  --brand-accent: #E6C9A8;
 }
 
 html {
@@ -34,7 +38,7 @@ button:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
-  outline: 2px solid #7A2340;
+  outline: 2px solid #C17389;
   outline-offset: 2px;
 }
 
@@ -52,4 +56,20 @@ textarea:focus-visible {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* Horizontal scroll rows (mobile categories) — no visible scrollbar, no
+   horizontal page overflow. */
+.scroll-row {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scroll-row::-webkit-scrollbar {
+  display: none;
+}
+.scroll-row > * {
+  scroll-snap-align: start;
 }
