@@ -30,6 +30,12 @@ export default function AdminShippingPage() {
     load();
   }
 
+  async function removeZone(id: string, name: string) {
+    if (!confirm(`متأكد إنك عايز تحذف منطقة "${name}"؟`)) return;
+    await supabase.from('shipping_zones').delete().eq('id', id);
+    load();
+  }
+
   return (
     <div>
       <h1 className="font-display text-2xl font-bold mb-6">مناطق الشحن والتوصيل</h1>
@@ -51,12 +57,15 @@ export default function AdminShippingPage() {
                 <th className="p-3">سعر التوصيل السريع</th>
                 <th className="p-3">رسوم إضافية</th>
                 <th className="p-3">نشط</th>
+                <th className="p-3"></th>
               </tr>
             </thead>
             <tbody>
               {zones.map((z) => (
                 <tr key={z.id} className="border-b border-blush last:border-0">
-                  <td className="p-3 font-bold">{z.name}</td>
+                  <td className="p-3">
+                    <input defaultValue={z.name} onBlur={(e) => updateField(z.id, 'name', e.target.value)} className="font-bold px-2 py-1 rounded-lg border border-blush w-28" />
+                  </td>
                   <td className="p-3">
                     <input type="number" defaultValue={z.standard_price} onBlur={(e) => updateField(z.id, 'standard_price', Number(e.target.value))} className="w-24 px-2 py-1 rounded-lg border border-blush" />
                   </td>
@@ -68,6 +77,9 @@ export default function AdminShippingPage() {
                   </td>
                   <td className="p-3">
                     <input type="checkbox" checked={z.active} onChange={(e) => updateField(z.id, 'active', e.target.checked)} />
+                  </td>
+                  <td className="p-3">
+                    <button onClick={() => removeZone(z.id, z.name)} className="text-red-600 text-xs font-bold">حذف</button>
                   </td>
                 </tr>
               ))}
