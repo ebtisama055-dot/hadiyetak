@@ -35,3 +35,20 @@ export async function getSiteBrand(): Promise<SiteBrand> {
     phone: data?.phone ?? null,
   };
 }
+
+export type SocialLink = {
+  id: string;
+  platform: string;
+  url: string;
+};
+
+/** Active social links (managed in Admin → روابط التواصل), for the footer. */
+export async function getSocialLinks(): Promise<SocialLink[]> {
+  const { data } = await supabase
+    .from('social_links')
+    .select('id, platform, url, active, display_order')
+    .eq('active', true)
+    .order('display_order', { ascending: true });
+
+  return (data ?? []).map((l) => ({ id: l.id, platform: l.platform, url: l.url }));
+}
