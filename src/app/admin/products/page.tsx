@@ -172,7 +172,7 @@ function ProductImagesManager({ product, onChange }: { product: any; onChange: (
   return (
     <div>
       <div className="flex items-center justify-between mb-3">
-        <h3 className="font-bold text-sm">صور "{product.name}"</h3>
+        <h3 className="font-bold text-sm">صور «{product.name}»</h3>
         <ImageUploader label="إضافة صور" onUploaded={addImage} />
       </div>
 
