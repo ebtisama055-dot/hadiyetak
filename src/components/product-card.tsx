@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { formatEGP } from '@/lib/format';
 import type { Product } from '@/lib/types';
 
-export function ProductCard({ product }: { product: Product }) {
+export function ProductCard({ product, seasonBadge }: { product: Product; seasonBadge?: string }) {
   const image = product.product_images?.find((i) => i.is_primary)?.image_url
     || product.product_images?.[0]?.image_url
     || '/placeholder-product.svg';
@@ -13,6 +13,14 @@ export function ProductCard({ product }: { product: Product }) {
     : null;
 
   const unavailable = product.stock_status === 'out_of_stock';
+
+  // At most ONE badge — priority: seasonal > discount > bestseller > new.
+  // Stacking badges creates visual noise; the product photo should be the hero.
+  let badge: { label: string; tone: 'rose' | 'forest' | 'gold' } | null = null;
+  if (seasonBadge) badge = { label: seasonBadge, tone: 'gold' };
+  else if (discount && discount > 0) badge = { label: `خصم ${discount}%`, tone: 'rose' };
+  else if (product.bestseller) badge = { label: 'الأكثر مبيعًا', tone: 'rose' };
+  else if (product.is_new) badge = { label: 'جديد', tone: 'forest' };
 
   return (
     <Link
@@ -27,11 +35,11 @@ export function ProductCard({ product }: { product: Product }) {
           sizes="(max-width: 768px) 50vw, 25vw"
           className="object-cover group-hover:scale-105 transition-transform duration-300"
         />
-        <div className="absolute top-2 right-2 flex flex-col gap-1 items-end">
-          {product.bestseller && <Badge>الأكثر مبيعًا</Badge>}
-          {product.is_new && <Badge tone="forest">جديد</Badge>}
-          {discount && discount > 0 && <Badge tone="gold">خصم {discount}%</Badge>}
-        </div>
+        {badge && (
+          <div className="absolute top-2 right-2">
+            <Badge tone={badge.tone}>{badge.label}</Badge>
+          </div>
+        )}
         {unavailable && (
           <div className="absolute inset-0 bg-ink/50 flex items-center justify-center">
             <span className="text-white font-bold text-sm">غير متوفر حاليًا</span>

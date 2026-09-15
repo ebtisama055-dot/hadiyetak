@@ -20,9 +20,19 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 bg-cream/95 backdrop-blur border-b border-blush">
       <div className="mx-auto max-w-6xl px-4 h-16 flex items-center justify-between">
-        <Link href="/" className="font-display text-2xl font-bold text-rose">
-          هديّتك
-        </Link>
+        <div className="flex items-center gap-3">
+          <button
+            className="md:hidden w-10 h-10 flex items-center justify-center -mr-2"
+            aria-label="القائمة"
+            aria-expanded={open}
+            onClick={() => setOpen((v) => !v)}
+          >
+            <MenuIcon />
+          </button>
+          <Link href="/" className="font-display text-2xl font-bold text-rose">
+            هديّتك
+          </Link>
+        </div>
 
         <nav className="hidden md:flex items-center gap-6 text-sm font-bold">
           {NAV.map((item) => (
@@ -32,28 +42,18 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-3">
-          <Link
-            href="/cart"
-            aria-label="السلة"
-            className="relative flex items-center justify-center w-10 h-10 rounded-full bg-rose text-white"
-          >
-            <CartIcon />
-            {count > 0 && (
-              <span className="absolute -top-1 -left-1 bg-gold text-ink text-[11px] font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                {count}
-              </span>
-            )}
-          </Link>
-          <button
-            className="md:hidden w-10 h-10 flex items-center justify-center"
-            aria-label="القائمة"
-            aria-expanded={open}
-            onClick={() => setOpen((v) => !v)}
-          >
-            <MenuIcon />
-          </button>
-        </div>
+        <Link
+          href="/cart"
+          aria-label="السلة"
+          className="relative flex items-center justify-center w-10 h-10 rounded-full bg-rose text-white"
+        >
+          <CartIcon />
+          {count > 0 && (
+            <span className="absolute -top-1 -left-1 bg-gold text-ink text-[11px] font-bold rounded-full w-5 h-5 flex items-center justify-center">
+              {count}
+            </span>
+          )}
+        </Link>
       </div>
 
       {open && (
