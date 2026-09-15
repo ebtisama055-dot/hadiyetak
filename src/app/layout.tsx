@@ -4,6 +4,7 @@ import './globals.css';
 import { SiteHeader } from '@/components/site-header';
 import { SiteFooter } from '@/components/site-footer';
 import { WhatsAppButton } from '@/components/whatsapp-button';
+import { getSiteBrand } from '@/lib/site-settings';
 
 const display = El_Messiri({
   subsets: ['arabic', 'latin'],
@@ -19,18 +20,25 @@ const body = Almarai({
   display: 'swap',
 });
 
-export const metadata: Metadata = {
-  title: 'هديّتك | هدية تفرّح',
-  description: 'متجر هديّتك لبيع الورد والهدايا الجاهزة في محافظة الوادي الجديد. تصفح، اختار، اطلب — وإحنا نوصّل.',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const brand = await getSiteBrand();
+  return {
+    title: `${brand.store_name ?? 'هديّتك'} | كل هدية .. حكاية`,
+    description: 'هديّتك هي المكان اللي تلاقي فيه أجمل الهدايا لكل لحظة مميزة — تصفح، اختار، اطلب، وإحنا نوصّل.',
+    icons: brand.favicon_url
+      ? { icon: brand.favicon_url, apple: brand.app_icon_url || brand.favicon_url }
+      : undefined,
+  };
+}
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const brand = await getSiteBrand();
   return (
     <html lang="ar" dir="rtl" className={`${display.variable} ${body.variable}`}>
-      <body className="font-body min-h-screen flex flex-col antialiased">
-        <SiteHeader />
+      <body className="font-body min-h-screen flex flex-col antialiased overflow-x-hidden">
+        <SiteHeader brand={brand} />
         <main className="flex-1">{children}</main>
-        <SiteFooter />
+        <SiteFooter brand={brand} />
         <WhatsAppButton />
       </body>
     </html>
