@@ -5,6 +5,18 @@
 :root {
   --font-display: 'El Messiri', sans-serif;
   --font-body: 'Almarai', sans-serif;
+
+  /* PERMANENT CORE BRAND TOKENS — never overridden by a season.
+     A season may read --season-* variables (set inline per-section by the
+     seasonal overlay components) but must never redefine these. */
+  --brand-primary: #5C2A3A;
+  --brand-secondary: #B98189;
+  --brand-background: #FBF7F2;
+  --brand-surface: #EFE6DA;
+  --brand-text: #2B2725;
+  --brand-muted: #8A7F76;
+  --brand-border: #E3D8CA;
+  --brand-accent: #B8935B;
 }
 
 html {
@@ -12,8 +24,8 @@ html {
 }
 
 body {
-  background-color: #FBF6F0;
-  color: #2B2320;
+  background-color: var(--brand-background);
+  color: var(--brand-text);
 }
 
 /* Visible keyboard focus everywhere */
