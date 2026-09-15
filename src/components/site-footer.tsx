@@ -1,12 +1,24 @@
 import Link from 'next/link';
+import Image from 'next/image';
+import type { SiteBrand } from '@/lib/site-settings';
 
-export function SiteFooter() {
+export function SiteFooter({ brand }: { brand: SiteBrand }) {
   return (
     <footer className="bg-rose-dark text-cream mt-16">
       <div className="mx-auto max-w-6xl px-4 py-12 grid gap-8 md:grid-cols-4">
         <div>
-          <div className="font-display text-2xl font-bold mb-2">هديّتك</div>
-          <p className="text-sm text-cream/80">هدية تفرّح — نوصّل الورد والهدايا الجاهزة لكل محافظة الوادي الجديد.</p>
+          {brand.logo_url ? (
+            <Image
+              src={brand.logo_url}
+              alt={brand.store_name ?? 'هديّتك'}
+              width={140}
+              height={40}
+              className="h-9 w-auto object-contain mb-3 brightness-0 invert opacity-90"
+            />
+          ) : (
+            <div className="font-display text-2xl font-bold mb-2">{brand.store_name ?? 'هديّتك'}</div>
+          )}
+          <p className="text-sm text-cream/80">{brand.tagline || 'كل هدية .. حكاية — نوصّل أجمل الهدايا لكل لحظة مميزة.'}</p>
         </div>
         <div>
           <h3 className="font-bold mb-3">تسوّق</h3>
@@ -28,11 +40,16 @@ export function SiteFooter() {
         </div>
         <div>
           <h3 className="font-bold mb-3">تواصل معنا</h3>
-          <p className="text-sm text-cream/80">واتساب: متاح من أيقونة المحادثة</p>
+          <ul className="space-y-2 text-sm text-cream/80">
+            <li><Link href="/content/about">من نحن</Link></li>
+            <li><Link href="/content/contact">تواصل معنا</Link></li>
+            {brand.phone && <li>هاتف: {brand.phone}</li>}
+            <li>واتساب: متاح من أيقونة المحادثة</li>
+          </ul>
         </div>
       </div>
       <div className="border-t border-cream/20 text-center text-xs text-cream/60 py-4">
-        © {new Date().getFullYear()} هديّتك. جميع الحقوق محفوظة.
+        © {new Date().getFullYear()} {brand.store_name ?? 'هديّتك'}. جميع الحقوق محفوظة.
       </div>
     </footer>
   );
