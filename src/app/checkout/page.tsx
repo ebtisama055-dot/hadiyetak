@@ -6,6 +6,7 @@ import { supabase } from '@/lib/supabase';
 import { useCart } from '@/lib/cart-store';
 import { formatEGP } from '@/lib/format';
 import type { ShippingZone, DeliverySlot } from '@/lib/types';
+import { rememberCustomerMobile } from '@/lib/notifications';
 
 export default function CheckoutPage() {
   const { lines, subtotal, clear } = useCart();
@@ -90,6 +91,7 @@ export default function CheckoutPage() {
     }
 
     clear();
+    rememberCustomerMobile(mobile);
     router.push(`/order-success/${data.order_number}`);
   }
 
