@@ -1,20 +1,16 @@
-import Link from 'next/link';
+import { redirect } from 'next/navigation';
+import type { Metadata } from 'next';
 import { supabase } from '@/lib/supabase';
 
-export const revalidate = 60;
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const { data } = await supabase.from('occasions').select('name').eq('slug', params.slug).maybeSingle();
+  if (!data) return {};
+  return {
+    title: `${data.name} | هديّتك`,
+    description: `اختار هدية مناسبة لـ${data.name} من هديّتك.`,
+  };
+}
 
-export default async function OccasionsPage() {
-  const { data } = await supabase.from('occasions').select('*').eq('active', true).order('display_order');
-  return (
-    <div className="mx-auto max-w-6xl px-4 py-8">
-      <h1 className="font-display text-3xl font-bold mb-6">المناسبات</h1>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-        {(data ?? []).map((o: any) => (
-          <Link key={o.id} href={`/occasions/${o.slug}`} className="p-6 rounded-card bg-white border border-blush text-center font-bold hover:border-rose transition-colors">
-            {o.name}
-          </Link>
-        ))}
-      </div>
-    </div>
-  );
+export default function OccasionRedirect({ params }: { params: { slug: string } }) {
+  redirect(`/products?occasion=${params.slug}`);
 }
