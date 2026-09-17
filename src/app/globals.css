@@ -21,6 +21,18 @@
   --brand-text: #4A3B38;
   --brand-border: #F0DDE1;
   --brand-accent: #E6C9A8;
+
+  /* HEADER / OVERLAY LAYOUT SYSTEM
+     Single source of truth for header height (incl. notch/Dynamic Island
+     safe area) so the sticky header, the notification panel's anchor
+     position, and the toast offset all agree with each other instead of
+     each hard-coding "64px" separately.
+     Z-INDEX HIERARCHY (documented once, used everywhere):
+       page content            → default stacking (z-0 / auto)
+       sticky header            → z-40
+       notification center/toast → z-50
+       critical modal overlays  → z-[60] */
+  --site-header-h: calc(4rem + env(safe-area-inset-top, 0px));
 }
 
 html {
