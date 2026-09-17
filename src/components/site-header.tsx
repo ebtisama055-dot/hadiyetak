@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useCart } from '@/lib/cart-store';
 import type { SiteBrand } from '@/lib/site-settings';
+import { NotificationBell } from '@/components/notifications/notification-bell';
 
 const NAV = [
   { href: '/', label: 'الرئيسية' },
@@ -30,7 +31,10 @@ export function SiteHeader({ brand }: { brand: SiteBrand }) {
   }
 
   return (
-    <header className="sticky top-0 z-40 bg-cream/95 backdrop-blur border-b border-blush">
+    <header
+      className="sticky top-0 z-40 bg-cream/95 backdrop-blur border-b border-blush"
+      style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
+    >
       <div className="mx-auto max-w-6xl px-4 h-16 flex items-center justify-between gap-3">
         <div className="flex items-center gap-3 shrink-0">
           <button
@@ -94,6 +98,7 @@ export function SiteHeader({ brand }: { brand: SiteBrand }) {
           >
             <UserIcon />
           </Link>
+          <NotificationBell />
           <Link
             href="/cart"
             aria-label="السلة"

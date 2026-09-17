@@ -19,6 +19,7 @@ const NAV = [
   { href: '/admin/banners', label: 'البانرات' },
   { href: '/admin/content', label: 'المحتوى والصفحات' },
   { href: '/admin/social', label: 'روابط التواصل' },
+  { href: '/admin/notifications', label: 'الإشعارات' },
   { href: '/admin/settings', label: 'الإعدادات' },
 ];
 
