@@ -1,8 +1,14 @@
 import { supabase } from '@/lib/supabase';
 import { ProductCard } from '@/components/product-card';
 import type { Product } from '@/lib/types';
+import type { Metadata } from 'next';
 
 export const revalidate = 30;
+
+export const metadata: Metadata = {
+  title: 'كل الهدايا | هديّتك',
+  description: 'تصفح كل الهدايا المتاحة في هديّتك — فلاتر حسب الفئة، المناسبة، والسعر.',
+};
 
 type SearchParams = {
   q?: string;
