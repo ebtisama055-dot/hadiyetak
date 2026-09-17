@@ -1,7 +1,13 @@
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import { supabase } from '@/lib/supabase';
 
 export const revalidate = 60;
+
+export const metadata: Metadata = {
+  title: 'الفئات | هديّتك',
+  description: 'تصفح فئات الهدايا في هديّتك — ورد، شوكولاتة، هدايا مخصصة وأكتر.',
+};
 
 export default async function CategoriesPage() {
   const { data } = await supabase.from('categories').select('*').eq('active', true).order('display_order');
