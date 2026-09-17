@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { formatEGP, formatArabicDate } from '@/lib/format';
+import { rememberCustomerMobile } from '@/lib/notifications';
 
 const STATUS_LABELS: Record<string, string> = {
   new: 'تم استلام الطلب',
@@ -34,6 +35,7 @@ export default function TrackOrderPage() {
       return;
     }
     setResult(data);
+    rememberCustomerMobile(mobile.trim());
   }
 
   const currentStepIndex = result ? STEPS.indexOf(result.status) : -1;
