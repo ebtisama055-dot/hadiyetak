@@ -27,6 +27,8 @@ export default function CheckoutPage() {
   const [notes, setNotes] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<'cod' | 'online'>('cod');
   const [deliveryDate, setDeliveryDate] = useState('');
+  const [paymentWalletNumber, setPaymentWalletNumber] = useState('');
+  const [paymentReference, setPaymentReference] = useState('');
 
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -37,6 +39,9 @@ export default function CheckoutPage() {
       if (data && data.length > 0) setZoneId(data[0].id);
     });
     supabase.from('delivery_slots').select('*').eq('active', true).then(({ data }) => setSlots((data as DeliverySlot[]) ?? []));
+    supabase.from('site_settings').select('payment_wallet_number').eq('id', 1).maybeSingle().then(({ data }) => {
+      setPaymentWalletNumber(data?.payment_wallet_number ?? '');
+    });
 
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
@@ -65,6 +70,11 @@ export default function CheckoutPage() {
       return;
     }
 
+    if (paymentMethod === 'online' && !paymentReference.trim()) {
+      setError('من فضلك حوّل المبلغ الأول واكتب رقم العملية أو آخر 3 أرقام من رقمك اللي حولت منه.');
+      return;
+    }
+
     setSubmitting(true);
     const { data, error: rpcError } = await supabase.rpc('create_order_with_items', {
       p_customer_name: name,
@@ -81,6 +91,7 @@ export default function CheckoutPage() {
       p_payment_method: paymentMethod,
       p_coupon_code: null,
       p_items: lines.map((l) => ({ product_id: l.product_id, quantity: l.quantity })),
+      p_payment_reference: paymentMethod === 'online' ? paymentReference.trim() : null,
     });
 
     setSubmitting(false);
@@ -167,9 +178,38 @@ export default function CheckoutPage() {
               <input type="radio" checked={paymentMethod === 'cod'} onChange={() => setPaymentMethod('cod')} /> الدفع عند الاستلام
             </label>
             <label className="flex items-center gap-2 text-sm font-bold">
-              <input type="radio" checked={paymentMethod === 'online'} onChange={() => setPaymentMethod('online')} /> دفع أونلاين
+              <input type="radio" checked={paymentMethod === 'online'} onChange={() => setPaymentMethod('online')} /> إنستاباي / محفظة إلكترونية
             </label>
           </div>
+
+          {paymentMethod === 'online' && (
+            <div className="mt-4 bg-blush/30 border border-blush rounded-xl p-4 space-y-3">
+              <p className="text-sm leading-relaxed">
+                حوّل مبلغ <strong>{formatEGP(total)}</strong> عن طريق إنستاباي أو أي محفظة إلكترونية (فودافون كاش / اتصالات كاش / أورنج موني) على الرقم:
+              </p>
+              <div className="flex items-center gap-2">
+                <span dir="ltr" className="font-bold text-lg bg-white border border-blush rounded-lg px-3 py-1.5 select-all">{paymentWalletNumber || '—'}</span>
+                {paymentWalletNumber && (
+                  <button
+                    type="button"
+                    onClick={() => navigator.clipboard.writeText(paymentWalletNumber)}
+                    className="text-xs font-bold text-rose underline"
+                  >
+                    نسخ الرقم
+                  </button>
+                )}
+              </div>
+              <Field
+                label="رقم العملية أو آخر 3 أرقام من رقمك اللي حوّلت منه"
+                value={paymentReference}
+                onChange={setPaymentReference}
+                required
+              />
+              <p className="text-xs text-ink/60">
+                طلبك هيتسجل فورًا وهيبقى "بانتظار تأكيد الدفع" لحد ما نتأكد من وصول التحويل، وهيوصلك إشعار أول ما يتأكد.
+              </p>
+            </div>
+          )}
         </Section>
 
         <div className="bg-white border border-blush rounded-card p-5">
