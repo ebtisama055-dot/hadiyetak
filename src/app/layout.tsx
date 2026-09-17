@@ -31,12 +31,28 @@ const body = Almarai({
 
 export async function generateMetadata(): Promise<Metadata> {
   const brand = await getSiteBrand();
+  const title = `${brand.store_name ?? 'هديّتك'} | كل هدية .. حكاية`;
+  const description = 'هديّتك هي المكان اللي تلاقي فيه أجمل الهدايا لكل لحظة مميزة — تصفح، اختار، اطلب، وإحنا نوصّل.';
   return {
-    title: `${brand.store_name ?? 'هديّتك'} | كل هدية .. حكاية`,
-    description: 'هديّتك هي المكان اللي تلاقي فيه أجمل الهدايا لكل لحظة مميزة — تصفح، اختار، اطلب، وإحنا نوصّل.',
+    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://hadiyetak-mu.vercel.app'),
+    title,
+    description,
     icons: brand.favicon_url
       ? { icon: brand.favicon_url, apple: brand.app_icon_url || brand.favicon_url }
       : undefined,
+    openGraph: {
+      title,
+      description,
+      locale: 'ar_EG',
+      type: 'website',
+      images: brand.logo_url ? [{ url: brand.logo_url }] : undefined,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: brand.logo_url ? [brand.logo_url] : undefined,
+    },
   };
 }
 
