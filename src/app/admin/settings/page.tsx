@@ -92,6 +92,7 @@ export default function AdminSettingsPage() {
           {field('tagline', 'الشعار (Tagline)')}
           {field('phone', 'رقم الهاتف')}
           {field('whatsapp_number', 'رقم واتساب')}
+          {field('payment_wallet_number', 'رقم إنستاباي / المحفظة (للدفع الأونلاين اليدوي)')}
           {field('email', 'البريد الإلكتروني')}
           {field('working_hours', 'ساعات العمل')}
           {field('minimum_order', 'الحد الأدنى للطلب', 'number')}
