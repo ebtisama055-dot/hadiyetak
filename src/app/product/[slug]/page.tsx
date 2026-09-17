@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
 import { supabase } from '@/lib/supabase';
 import { formatEGP } from '@/lib/format';
 import { AddToCart } from '@/components/add-to-cart';
@@ -14,6 +15,30 @@ async function getProduct(slug: string) {
     .eq('visibility', 'published')
     .maybeSingle();
   return data;
+}
+
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const product = await getProduct(params.slug);
+  if (!product) return {};
+  const images = (product.product_images ?? []).sort((a: any, b: any) => a.display_order - b.display_order);
+  const mainImage = images.find((i: any) => i.is_primary)?.image_url ?? images[0]?.image_url;
+  const description = product.short_description || product.description || `${product.name} — اطلبها الآن من هديّتك وإحنا نوصّلها ليك.`;
+  return {
+    title: `${product.name} | هديّتك`,
+    description,
+    openGraph: {
+      title: product.name,
+      description,
+      images: mainImage ? [{ url: mainImage }] : undefined,
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: product.name,
+      description,
+      images: mainImage ? [mainImage] : undefined,
+    },
+  };
 }
 
 export default async function ProductPage({ params }: { params: { slug: string } }) {
