@@ -1,8 +1,13 @@
-export function WhatsAppButton() {
-  const number = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '201000000000';
+import type { SiteBrand } from '@/lib/site-settings';
+import { whatsappHref } from '@/lib/format';
+
+export function WhatsAppButton({ brand }: { brand: SiteBrand }) {
+  const href = whatsappHref(brand.whatsapp_number);
+  if (!href) return null;
+
   return (
     <a
-      href={`https://wa.me/${number}`}
+      href={href}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="تواصل معنا عبر واتساب"

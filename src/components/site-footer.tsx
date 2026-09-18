@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import type { SiteBrand, SocialLink } from '@/lib/site-settings';
 import { SocialIcon } from '@/components/social-icon';
+import { whatsappHref } from '@/lib/format';
 
 type FooterColumn = {
   title: string;
@@ -33,8 +34,8 @@ function buildColumns(brand: SiteBrand): FooterColumn[] {
       links: [
         { href: '/content/about', label: 'من نحن' },
         { href: '/content/contact', label: 'تواصل معنا' },
-        ...(brand.whatsapp_number
-          ? [{ href: `https://wa.me/${brand.whatsapp_number}`, label: 'واتساب' }]
+        ...(whatsappHref(brand.whatsapp_number)
+          ? [{ href: whatsappHref(brand.whatsapp_number)!, label: 'واتساب' }]
           : [{ href: '#', label: 'واتساب: متاح من أيقونة المحادثة' }]),
       ],
     },
