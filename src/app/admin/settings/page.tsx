@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { supabase } from '@/lib/supabase';
 import { ImageUploader } from '@/components/image-uploader';
+import { whatsappHref } from '@/lib/format';
 
 const LOGO_FIELDS: { key: 'logo_url' | 'logo_compact_url' | 'app_icon_url' | 'favicon_url'; label: string; hint: string }[] = [
   { key: 'logo_url', label: 'اللوجو الأساسي (Primary Logo)', hint: 'يستخدم في Header الموقع — PNG / WebP / SVG' },
@@ -91,7 +92,22 @@ export default function AdminSettingsPage() {
           {field('store_name', 'اسم المتجر')}
           {field('tagline', 'الشعار (Tagline)')}
           {field('phone', 'رقم الهاتف')}
-          {field('whatsapp_number', 'رقم واتساب')}
+          <div>
+            {field('whatsapp_number', 'رقم واتساب')}
+            <p className="text-[11px] text-ink/50 mt-1">
+              اكتب الرقم المصري بدون كود الدولة، مثال: 01xxxxxxxxx — ده هو الرقم اللي هيتفتح لما أي عميل يدوس على زرار واتساب في الموقع.
+            </p>
+            {whatsappHref(settings.whatsapp_number) && (
+              <a
+                href={whatsappHref(settings.whatsapp_number)!}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs font-bold text-rose underline mt-1 inline-block"
+              >
+                جرّب الرقم ده على واتساب
+              </a>
+            )}
+          </div>
           {field('payment_wallet_number', 'رقم إنستاباي / المحفظة (للدفع الأونلاين اليدوي)')}
           {field('email', 'البريد الإلكتروني')}
           {field('working_hours', 'ساعات العمل')}
