@@ -177,12 +177,19 @@ export default function CheckoutPage() {
             <label className="flex items-center gap-2 text-sm font-bold">
               <input type="radio" checked={paymentMethod === 'cod'} onChange={() => setPaymentMethod('cod')} /> الدفع عند الاستلام
             </label>
-            <label className="flex items-center gap-2 text-sm font-bold">
-              <input type="radio" checked={paymentMethod === 'online'} onChange={() => setPaymentMethod('online')} /> إنستاباي / محفظة إلكترونية
-            </label>
+            {paymentWalletNumber && (
+              <label className="flex items-center gap-2 text-sm font-bold">
+                <input type="radio" checked={paymentMethod === 'online'} onChange={() => setPaymentMethod('online')} /> إنستاباي / محفظة إلكترونية
+              </label>
+            )}
           </div>
+          {!paymentWalletNumber && (
+            <p className="text-xs text-ink/50 mt-2">
+              الدفع الأونلاين مش متاح دلوقتي — الدفع هيكون عند الاستلام.
+            </p>
+          )}
 
-          {paymentMethod === 'online' && (
+          {paymentMethod === 'online' && paymentWalletNumber && (
             <div className="mt-4 bg-blush/30 border border-blush rounded-xl p-4 space-y-3">
               <p className="text-sm leading-relaxed">
                 حوّل مبلغ <strong>{formatEGP(total)}</strong> عن طريق إنستاباي أو أي محفظة إلكترونية (فودافون كاش / اتصالات كاش / أورنج موني) على الرقم:
@@ -206,7 +213,7 @@ export default function CheckoutPage() {
                 required
               />
               <p className="text-xs text-ink/60">
-                طلبك هيتسجل فورًا وهيبقى "بانتظار تأكيد الدفع" لحد ما نتأكد من وصول التحويل، وهيوصلك إشعار أول ما يتأكد.
+                طلبك هيتسجل فورًا وهيبقى &quot;بانتظار تأكيد الدفع&quot; لحد ما نتأكد من وصول التحويل، وهيوصلك إشعار أول ما يتأكد.
               </p>
             </div>
           )}
